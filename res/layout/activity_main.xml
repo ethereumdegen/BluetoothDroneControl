@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="0.05"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/bluetoothDevice"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_weight="0.6"
+            android:prompt="@string/seachingDev" />
+
+        <Button
+            android:id="@+id/searchDevButton"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ButtonRe"
+            android:layout_weight="0.2" />
+
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="@string/ButtonOk" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/TerminalView"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="0.85"
+        android:text="@string/terminalMessage" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/sendMessage"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:inputType="text"
+            android:text="@string/TerminalInitMessage" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="@string/SendButtonText" />
+    </LinearLayout>
+
+</LinearLayout>
