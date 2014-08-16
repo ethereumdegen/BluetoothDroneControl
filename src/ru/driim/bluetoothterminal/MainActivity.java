@@ -1,12 +1,12 @@
 package ru.driim.bluetoothterminal;
 
-// TODO: On spinner selection change currentDevice
-// TODO: Add ability to save state
-// TODO: CHange buttons on ImageButtons
-/* Hint: If you are connecting to a Bluetooth serial board then try using 
- * the well-known SPP UUID 00001101-0000-1000-8000-00805F9B34FB. However 
- * if you are connecting to an Android peer then please generate your own unique UUID. */
-
+/*
+ * Originall by Driim
+ * 
+ * Modified by Andrew Mazzola to fix bugs
+ * 
+ * 
+ */
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -68,14 +68,13 @@ OnItemSelectedListener
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) 
-		{  // readed message
+		{  // read message
 
 
 			switch(msg.what) 
 			{
 			case MESSAGE_READ: 
-				// readed data from bluetooth
-				// TODO: печать в терминал выглядит коряво
+				// read data from bluetooth
 				toastMessage(R.string.SocketRead, Toast.LENGTH_SHORT);
 
 				byte[] buffer = new byte[msg.arg1];
@@ -102,6 +101,8 @@ OnItemSelectedListener
 		currentDevice = null;
 		bConnection = null;
 		
+		DroneController droneController = new DroneController();
+		droneController.start();
 		
 		devicesList = new ArrayList<BluetoothDevice>();
 		//prepare adapter for the spinner
@@ -154,6 +155,35 @@ OnItemSelectedListener
 		}
 	}
 
+	class DroneController extends Thread {
+		@Override
+		public void run()
+		{
+			while(true)
+			{
+				try
+				{
+				
+				CharSequence message = "H";
+				printMessageOnTerminal(message);
+				byte[] msg = charSequenceToByteArray(message);
+				bConnection.write(msg);
+				}catch(Exception e)
+				{
+				e.printStackTrace();
+				}
+				
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -210,18 +240,41 @@ OnItemSelectedListener
 	}
 
 	public void printMessageOnTerminal(CharSequence message) {
-		terminal.append("\n#>");
-		terminal.append(message);
+		final CharSequence seq = message;
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+
+		//stuff that updates ui
+		    	 terminal.append("\n#>");
+		    	 terminal.append(seq);
+		    }
+		});
+		
 	}
 	
 	public void smprintMessageOnTerminal(CharSequence message) {
-		terminal.append("\n#>");
+		/*terminal.append("\n#>");
 		for(int i=0; i< message.length(); i++)
 		{
 			int m = (int)message.charAt(i);
 			terminal.append(String.valueOf(m));
 			terminal.append(" ");
-		}
+		}*/
+		
+		final CharSequence seq = message;
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		    		for(int i=0; i< seq.length(); i++)
+		    		{
+		    			int m = (int)seq.charAt(i);
+		    			terminal.append(String.valueOf(m));
+		    			terminal.append(" ");
+		    		}
+		    }
+		});
+		
 	}
 
 	@Override
@@ -530,4 +583,6 @@ class BluetoothConnection extends Thread {
 			mmServerSocket.close();
 		} catch (IOException e) { }
 	}
+	
+	
 }
